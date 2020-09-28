@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
+
+import 'package:reminder_v2/data/colors.dart';
 
 class NotesScreen extends StatefulWidget {
   @override
@@ -6,6 +9,13 @@ class NotesScreen extends StatefulWidget {
 }
 
 class _NotesScreenState extends State<NotesScreen> {
+  List<Color> colors = [
+    Color(0xFFf9c0c0),
+    Color(0xFFccf6c8),
+    Color(0xFFfafcc2),
+    Color(0xFFf6d6ad)
+  ];
+  int pickColor;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,72 +34,7 @@ class _NotesScreenState extends State<NotesScreen> {
                 size: 35,
               ),
               onPressed: () {
-                showModalBottomSheet(
-                    context: context,
-                    clipBehavior: Clip.antiAlias,
-                    useRootNavigator: true,
-                    isScrollControlled: true,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(24),
-                      ),
-                    ),
-                    builder: (context) {
-                      return Container(
-                        padding: EdgeInsets.only(
-                            bottom: MediaQuery.of(context).viewInsets.bottom,
-                            top: 32,
-                            right: 32,
-                            left: 32),
-                        height: MediaQuery.of(context).size.height,
-                        child: Form(
-                            child: Column(
-                          children: [
-                            Text(
-                              'Tambah Catatan',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Montserrat'),
-                            ),
-                            SizedBox(
-                              height: 30,
-                            ),
-                            TextFormField(
-                              maxLength: 30,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Text'),
-                            ),
-                            TextFormField(
-                              maxLines: 10,
-                              decoration: InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Write Somethings...'),
-                            ),
-                            SizedBox(
-                              height: 15,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                FloatingActionButton.extended(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    backgroundColor: Colors.red,
-                                    icon: Icon(Icons.backspace),
-                                    label: Text('Kembali')),
-                                FloatingActionButton.extended(
-                                    onPressed: () {},
-                                    icon: Icon(Icons.add_box),
-                                    label: Text('Simpan')),
-                              ],
-                            )
-                          ],
-                        )),
-                      );
-                    });
+                formBottomCatatan(context);
               })
         ],
       ),
@@ -108,7 +53,7 @@ class _NotesScreenState extends State<NotesScreen> {
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                 decoration: BoxDecoration(
-                    color: Colors.greenAccent[200],
+                    color: ColorNotes.yellow,
                     borderRadius: BorderRadius.circular(5.0)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,5 +82,78 @@ class _NotesScreenState extends State<NotesScreen> {
         }),
       ),
     );
+  }
+
+  Future formBottomCatatan(BuildContext context) {
+    return showModalBottomSheet(
+        context: context,
+        clipBehavior: Clip.antiAlias,
+        useRootNavigator: true,
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(24),
+          ),
+        ),
+        builder: (context) {
+          return Container(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+                top: 32,
+                right: 32,
+                left: 32),
+            height: MediaQuery.of(context).size.height,
+            child: Form(
+                child: Column(
+              children: [
+                Text(
+                  'Tambah Catatan',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Montserrat'),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                TextFormField(
+                  maxLength: 30,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(), hintText: 'Text'),
+                ),
+                TextFormField(
+                  maxLines: 10,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Write Somethings...'),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FloatingActionButton.extended(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        backgroundColor: Colors.red,
+                        icon: Icon(Icons.backspace),
+                        label: Text('Kembali')),
+                    FloatingActionButton.extended(
+                        onPressed: () {
+                          setState(() {
+                            pickColor = Random().nextInt(3);
+                          });
+                          print(pickColor);
+                        },
+                        icon: Icon(Icons.add_box),
+                        label: Text('Simpan')),
+                  ],
+                )
+              ],
+            )),
+          );
+        });
   }
 }
